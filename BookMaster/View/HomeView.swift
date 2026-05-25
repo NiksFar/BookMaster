@@ -23,8 +23,18 @@ struct HomeView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
+            
+            //MARK: Header
             HeaderView()
-            ScrollView { }
+            
+            //MARK: TimeSlots
+            ScrollView {
+                VStack(spacing: 19) {
+                    ForEach(TimeSlot.mockData) { slot in
+                        TimeSlotCell(observed: .init(timeSlot: slot))
+                    }
+                }
+            }
         }
         .onAppear {
             let currentWeek = Date().fetchWeek()
@@ -44,7 +54,7 @@ struct HomeView: View {
                 Text(currentDate.format("MMMM"))
                     .foregroundStyle(.blue)
                 Text(currentDate.format("YYYY"))
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(.darkGrey)
             }
             .font(.title.bold())
             Text(currentDate.formatted(date: .complete,
@@ -52,7 +62,7 @@ struct HomeView: View {
                 .font(.callout)
                 .fontWeight(.semibold)
                 .textScale(.secondary)
-                .foregroundStyle(.gray)
+                .foregroundStyle(.lightGray)
             
             TabView(selection: $currentWeekIndex) {
                 ForEach(weekSlider.indices, id: \.self) { index in
@@ -65,6 +75,15 @@ struct HomeView: View {
         
         .hSpacing(.leading)
         .padding()
+        .background(.white)
+        overlay(alignment: .topTrailing) {
+            Image(.saturn)
+                .resizable()
+                .frame(width: 52, height: 52)
+                .scaledToFill()
+                .clipShape(.circle)
+                .offset(x: -19)
+        }
     }
     
     @ViewBuilder func WeekView(_ week: [Date.WeekDay]) -> some View {
@@ -75,12 +94,12 @@ struct HomeView: View {
                         .font(.callout)
                         .fontWeight(.medium)
                         .textScale(.secondary)
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(.lightGray)
                     Text(weekDay.date.format("dd"))
                         .font(.callout)
                         .fontWeight(.bold)
                         .textScale(.secondary)
-                        .foregroundStyle(isSameDay(weekDay.date, currentDate) ? .white : .gray)
+                        .foregroundStyle(isSameDay(weekDay.date, currentDate) ? .white : .darkGrey)
                         .frame(width: 36, height: 36)
                         .background {
                             if isSameDay(weekDay.date, currentDate) {
@@ -92,7 +111,7 @@ struct HomeView: View {
                             
                             if weekDay.date.isToday {
                                 Circle()
-                                    .fill(.cyan)
+                                    .fill(.darkBlue)
                                     .frame(width: 6, height: 6)
                                     .vSpacing(.bottom)
                                     .offset(y: 12)
@@ -108,7 +127,7 @@ struct HomeView: View {
             }
             
         }
-        .background{
+        .background {
             GeometryReader { proxy in
                 let minX = proxy.frame(in: .global).minX
                 

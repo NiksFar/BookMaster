@@ -16,3 +16,6 @@ struct BookMasterApp: App {
         }
     }
 }
+
+
+let currentUserID: UUID = .init()
