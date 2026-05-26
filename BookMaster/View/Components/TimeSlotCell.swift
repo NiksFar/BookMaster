@@ -16,12 +16,12 @@ struct TimeSlotCell: View {
                 .font(.title3.bold())
             Text(observed.isFreeDescription)
         }
-        .frame(width: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 19)
         .padding(.vertical, 12)
         .background(.bgGreen)
-        clipShape(.rect(cornerRadius: 14))
-        offset(x: 42)
+        .clipShape(.rect(cornerRadius: 14))
+        .offset(x: 42)
     }
 }
 

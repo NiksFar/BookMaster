@@ -62,7 +62,7 @@ struct HomeView: View {
                 .font(.callout)
                 .fontWeight(.semibold)
                 .textScale(.secondary)
-                .foregroundStyle(.lightGray)
+                .foregroundStyle(.lightyGray)
             
             TabView(selection: $currentWeekIndex) {
                 ForEach(weekSlider.indices, id: \.self) { index in
@@ -76,8 +76,8 @@ struct HomeView: View {
         .hSpacing(.leading)
         .padding()
         .background(.white)
-        overlay(alignment: .topTrailing) {
-            Image(.saturn)
+        .overlay(alignment: .topTrailing) {
+            Image(.me)
                 .resizable()
                 .frame(width: 52, height: 52)
                 .scaledToFill()
@@ -94,7 +94,7 @@ struct HomeView: View {
                         .font(.callout)
                         .fontWeight(.medium)
                         .textScale(.secondary)
-                        .foregroundStyle(.lightGray)
+                        .foregroundStyle(.lightyGray)
                     Text(weekDay.date.format("dd"))
                         .font(.callout)
                         .fontWeight(.bold)
