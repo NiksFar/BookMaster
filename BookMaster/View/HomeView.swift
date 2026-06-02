@@ -16,10 +16,12 @@ struct HomeView: View {
     @State private var currentWeekIndex: Int = 1
     @State private var createWeek: Bool = true
     @State private var weekSlider = [[Date.WeekDay]]()
-    
+    @State private var showProfileView: Bool = false
     // MARK: View Properties
     @Namespace private var animation
     @State private var showApproveView: Bool = false
+    @State private var name: String = ""
+    @State private var phone: String = ""
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -46,6 +48,70 @@ struct HomeView: View {
                 weekSlider.append(lastDate.createNextWeek())
             }
         }
+        .overlay {
+            if showProfileView {
+                Rectangle()
+                    .fill(.black.opacity(0.78))
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        showProfileView.toggle()
+                    }
+            }
+        }
+        .overlay {
+            VStack(spacing: 45) {
+                VStack(spacing: 27) {
+                    TextField("name", text: $name)
+                        .padding(.top, 109)
+                        .font(.title.bold())
+                        .padding(.bottom, -16)
+                    LeafTextField(isSecure: false, title: "Your phone", text: $phone)
+                    Text("Next appointments")
+                        .font(.caption.bold())
+                        .padding(.bottom, -16)
+                    TabView {
+                        
+                    }
+                        .frame(height: 75)
+                        .background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(.bgGreen)
+                        }
+                        .tabViewStyle(.page)
+                        .tint(.darkBlue)
+                    LeafButton(title: "Previous Appointments") {
+                        
+                    }
+                }
+                
+                .padding(.horizontal, 37)
+                .padding(.bottom, 40)
+                .background(.white)
+                .clipShape(.rect(cornerRadii: .init(topLeading: 24,
+                                                    bottomLeading: 0,
+                                                    bottomTrailing: 48,
+                                                    topTrailing: 80)))
+                .overlay(alignment: .top) {
+                    Image(.me)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 164, height: 164)
+                        .clipShape(.circle)
+                        .padding(11)
+                        .background(Circle().fill(Color.white))
+                        .offset(y: -93)
+                }
+                
+                .padding(.horizontal, 21)
+                Button("Quit account") {
+                    
+                }
+                .foregroundStyle(.red)
+            }
+            .offset(y: showProfileView ? 0 : 1000)
+            .animation(.easeInOut, value: showProfileView)
+        }
+        
     }
     
     @ViewBuilder func HeaderView() -> some View {
@@ -83,6 +149,9 @@ struct HomeView: View {
                 .scaledToFill()
                 .clipShape(.circle)
                 .offset(x: -19)
+                .onTapGesture {
+                    showProfileView.toggle()
+                }
         }
     }
     
@@ -162,7 +231,7 @@ struct HomeView: View {
 }
 
 
-//#Preview {
-//    HomeView()
-//}
+#Preview {
+    HomeView()
+}
 
