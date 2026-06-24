@@ -17,11 +17,15 @@ struct HomeView: View {
     @State private var createWeek: Bool = true
     @State private var weekSlider = [[Date.WeekDay]]()
     @State private var showProfileView: Bool = false
+    @State private var name: String = ""
+    @State private var phone: String = ""
+    @State private var observed = Observed()
+    @State private var selectedSlot: TimeSlot?
+    @State private var showBookingSheet: Bool = false
+    
     // MARK: View Properties
     @Namespace private var animation
     @State private var showApproveView: Bool = false
-    @State private var name: String = ""
-    @State private var phone: String = ""
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -32,8 +36,14 @@ struct HomeView: View {
             //MARK: TimeSlots
             ScrollView {
                 VStack(spacing: 19) {
-                    ForEach(TimeSlot.mockData) { slot in
+                    ForEach(observed.filteredSlots) { slot in
                         TimeSlotCell(observed: .init(timeSlot: slot))
+                        onTapGesture {
+                            selectedSlot = slot
+                            withAnimation {
+                                showBookingSheet = true
+                            }
+                        }
                     }
                 }
             }
@@ -58,6 +68,12 @@ struct HomeView: View {
                     }
             }
         }
+        
+        .overlay(alignment: .bottom ,content: {
+                BookingSheet()
+                .offset(y: showBookingSheet ? 50 : 800)
+        })
+        
         .overlay {
             VStack(spacing: 45) {
                 VStack(spacing: 27) {
@@ -110,6 +126,7 @@ struct HomeView: View {
             }
             .offset(y: showProfileView ? 0 : 1000)
             .animation(.easeInOut, value: showProfileView)
+            .animation(.easeInOut, value: showBookingSheet)
         }
         
     }
@@ -191,6 +208,7 @@ struct HomeView: View {
                 .onTapGesture {
                     withAnimation {
                         currentDate = weekDay.date
+                        filterTimeslots()
                     }
                 }
             }
@@ -228,10 +246,66 @@ struct HomeView: View {
         }
     }
     
+    func  filterTimeslots() {
+        observed.filteredSlots = observed.currentMaster.slots.filter { slot in
+            Date.compareDays(first: slot.date, second: currentDate)
+        }
+    }
+    
+    @ViewBuilder
+    func BookingSheet() -> some View {
+        VStack {
+            Text("Your specialist")
+            Text(observed.currentMaster.name)
+                .font(.title.bold())
+            Text("Date and time:")
+            if let selectedSlot {
+                Text("\(selectedSlot.date.formatted(date: .numeric, time: .shortened)) - \(selectedSlot.endDate.formatted(date: .omitted, time: .shortened)))")
+                    .font(.title.bold())
+            }
+            
+            Button("Book") {
+                observed.book(client: observed.currentUser.id, slot: selectedSlot!)
+            }
+            .frame(width: 142, height: 37)
+            .background(.bgGreen)
+            .tint(.black)
+            .clipShape(.rect(cornerRadius: 8))
+            .font(.title3)
+            
+            Button("Decline") {
+                withAnimation {
+                    showBookingSheet = false
+                }
+            }
+            .frame(width: 142)
+            .background(.red)
+            .clipShape(.rect(cornerRadius: 8))
+            .font(.title3)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 279)
+        .background(.white)
+        .clipShape(.rect(cornerRadii: .init(topLeading: 24,
+                                           bottomLeading: 0,
+                                           bottomTrailing: 0,
+                                           topTrailing: 24)))
+        .shadow(radius: 2)
+        .overlay(alignment: .top) {
+            Image(.me)
+                .resizable()
+                .scaledToFill()
+                .frame(height: 120)
+                .clipShape(.circle)
+                .offset(y: -60)
+        }
+}
+    
 }
 
 
-#Preview {
-    HomeView()
-}
+
+//#Preview {
+//    HomeView()
+//}
 

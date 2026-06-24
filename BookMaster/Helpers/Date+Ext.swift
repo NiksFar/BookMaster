@@ -61,6 +61,10 @@ extension Date {
         return fetchWeek(previousDate)
     }
     
+    static func compareDays(first: Date, second: Date) -> Bool {
+        Calendar.current.compare(first, to: second, toGranularity: .day) == .orderedSame
+    }
+    
     struct WeekDay: Identifiable {
         var id: UUID = UUID()
         var date: Date

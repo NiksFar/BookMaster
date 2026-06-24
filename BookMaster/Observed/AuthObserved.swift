@@ -9,7 +9,7 @@ import Foundation
 
 extension AuthView {
     @Observable
-    class Observed {
+    final class Observed {
         var currentProfile: Profile?
         
         func auth(email: String, password: String) {

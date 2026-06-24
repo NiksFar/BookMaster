@@ -42,13 +42,11 @@ class TimeSlot: Identifiable {
 }
 
 extension TimeSlot {
-    
-    var representation: [String: Any] {
-        var repres: [String: Any] = [:]
-        repres["id"] = id
-        repres["date"] = Timestamp(date: date)
-        repres["endDate"] = Timestamp(date: endDate)
-        repres["masterID"] = masterID
-        return repres
-    }
+    static let mockMasterID = UUID()
+    static var mockData: [TimeSlot] = [
+        TimeSlot(date: .init(timeIntervalSince1970: 1), masterID: .init()),
+        TimeSlot(date: .init(timeIntervalSince1970: 2), masterID: .init()),
+        TimeSlot(date: .init(timeIntervalSince1970: 3), masterID: .init()),
+        TimeSlot(date: .init(timeIntervalSince1970: 4), masterID: .init())
+    ]
 }

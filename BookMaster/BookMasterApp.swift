@@ -29,4 +29,4 @@ struct BookMasterApp: App {
 }
 
 
-let currentUserID: UUID = .init()
+let currentUserID: String = .init()

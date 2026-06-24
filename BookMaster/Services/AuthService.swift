@@ -22,7 +22,7 @@ actor AuthService {
     //TODO: Reg
     func signUp(withEmail email: String, password: String) async throws -> Profile {
         let user = try await auth.createUser(withEmail: email, password: password).user
-        let profile = Profile(id: user.uid, name: "", email: user.email!, phone: 0)
+        let profile = await Profile(id: user.uid, name: "", email: user.email!, phone: 0)
         return try await FirestoreService.shared.createProfile(profile)
     }
     
